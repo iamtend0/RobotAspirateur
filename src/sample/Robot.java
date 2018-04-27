@@ -3,8 +3,11 @@ package sample;
 import java.util.ArrayList;
 
 public class Robot {
+
+    /* Coordonnées du robot */
     private int positionx;
     private int positiony;
+
     private Batterie batterie;
     private Reserve reserve;
     private Direction deplacements;
