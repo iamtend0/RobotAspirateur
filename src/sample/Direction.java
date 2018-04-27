@@ -1,9 +1,9 @@
 package sample;
 
 public enum Direction {
-    gauche,
-    droite,
-    haut,
-    bas;
+    GAUCHE,
+    DROITE,
+    HAUT,
+    BAS;
 
 }
