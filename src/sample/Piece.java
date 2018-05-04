@@ -1,17 +1,75 @@
 package sample;
 
-import java.io.FileInputStream;
+import javax.swing.text.Element;
+import java.io.*;
+import java.util.ArrayList;
 
 public class Piece {
-    private int longueur;
-    private int largeur;
-    String[][] matrice = new String[longueur][largeur];
+    private int nblignes;
+    private int nbcolonnes;
+    ArrayList<ElementPiece> elementsPiece = new ArrayList();
 
     /**
      * Construteur de pièce.
+     * @param pieceTxt fichier à lire pour créer une pièce
      */
-    public Piece() {
+    public Piece(String pieceTxt) throws IOException {
 
-        FileInputStream in = new FileInputStream("mapiece.txt");
+        try {
+            FileInputStream in = new FileInputStream(pieceTxt);
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            String line = "";
+            // On remplit maintenant la liste des elements de la pièce
+            int i = 0;
+            while ((line = reader.readLine()) != null) {
+                for (int j = 0; j <line.length(); j=j+2) {
+                    this.elementsPiece.add(new ElementPiece(i, j, line.substring(j, j+2)));
+                }
+                i++;
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Accesseur de la matrice
+     * @return matrice de la pièce
+     */
+    public ArrayList<ElementPiece> getMatrice() {
+        return elementsPiece;
+    }
+
+    /**
+     * Accesseur nblignes de la matrice
+     * @return nblignes
+     */
+    public int getNblignes() {
+        return nblignes;
+    }
+
+    /**
+     * Accesseur nbcolonnes de la matrice
+     * @return nbcolonnes
+     */
+    public int getNbcolonnes() {
+        return nbcolonnes;
+    }
+
+    /**
+     * Affiche en console la matrice de la pièce
+     */
+    public void afficherMatrice() {
+
+        for(ElementPiece element : this.elementsPiece)
+        {
+            System.out.println("[" + element.getLigne() + ", " + element.getColonne() +
+            "] => " + element.getTypeElement());
+        }
+
     }
 }
+
