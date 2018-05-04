@@ -29,6 +29,9 @@ public class Piece {
                 i++;
             }
 
+            this.nbcolonnes = line.length()/2;
+            this.nblignes = elementsPiece.size();
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
