@@ -33,10 +33,18 @@ public class Base {
         return presence;
     }
 
+    /**
+     * Accesseur position x
+     * @return x
+     */
     public int getPositionx() {
         return positionx;
     }
 
+    /**
+     * Accesseur position y
+     * @return y
+     */
     public int getPositiony() {
         return positiony;
     }
