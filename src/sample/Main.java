@@ -35,9 +35,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Main extends Application {
 
     private static int index = 0;
-    private int distanceParcourue = 0; //Distance parcourue par le robot
-    private int retourBase = 0;        //Nombre de fois où le robot est retourné à la base
-    private int quantitePoussiere = 0; //Quantité de poussière amassé par le robot
+    private int distanceParcourue = 0; //distance parcourue par le robot
+    private int retourBase = 0;        //nombre de fois où le robot est retourné à la base
+    private int quantitePoussiere = 0; //quantité de poussière amassé par le robot
 
     Piece piece;
 
@@ -53,8 +53,7 @@ public class Main extends Application {
     Reserve reserve = new Reserve(50);
     Capteur capteur = new Capteur(piece, false);
     Base base = new Base(batterie, capteur, reserve);
-    Robot robot = new Robot(batterie, reserve, base, piece, 4, false);
-
+    Robot robot = new Robot(batterie, reserve, base, piece, 4);
 
 
     Pane pane = new Pane();
@@ -69,8 +68,8 @@ public class Main extends Application {
     Label elementBase = new Label("BB");
     Label elementTapis2 = new Label(" ");
     Label elementSol2 = new Label(" ");
-    Label aspirationTapis=new Label("Aspiration en cours du tapis...");
-    Label aspirationSol=new Label("Aspiration en cours du sol...");
+    Label aspirationTapis = new Label("Aspiration en cours du tapis...");
+    Label aspirationSol = new Label("Aspiration en cours du sol...");
     Label temps = new Label("Temps ecoulé depuis demarrage :");
     Label etatBatterie = new Label("Etat de la Batterie :" + robot.getBatterie().getEnergie() + "/" + robot.getBatterie().getCapacité());
     Label etatReserve = new Label("Etat de la Reserve:" + robot.getReserve().getQuantitePoussiere() + "/" + robot.getReserve().getTaille());
@@ -91,7 +90,6 @@ public class Main extends Application {
     MenuBar barre = new MenuBar();
 
 
-
     /**
      * Programme principal
      *
@@ -103,20 +101,23 @@ public class Main extends Application {
 
     /**
      * Recherche si un node(tapis,sol...) se trouve dejà à un endroit specifique du gridpane et le retire
+     *
      * @param gridpane
      * @param col
      * @param row
      */
-    private void getNodeFromGridPane(GridPane gridpane,int col, int row) {
+    private void getNodeFromGridPane(GridPane gridpane, int col, int row) {
         for (Node node : gridpane.getChildren()) {
-            if ( node!=aspirateur && GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
+            if (node != aspirateur && GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
                 gridpane.getChildren().remove(node);
                 break;
             }
         }
     }
+
     /**
      * Fixe une position en x et y au label
+     *
      * @param label
      * @param x
      * @param y
@@ -139,7 +140,7 @@ public class Main extends Application {
     public boolean capteurVide(int x, int y, int positionCapteur) {
         Label elementVide = new Label("V");
         boolean detection = false;
-        //Appelle la fonction capteurVide pour savoir si le capteur detecte du vide en position (x,y)...
+        //appelle la fonction capteurVide pour savoir si le capteur detecte du vide en position (x,y)...
         robot.getCapteurs().get(4).capteurVide(x, y);
         if (robot.getCapteurs().get(4).isEtat() == true) {
             /* si le capteur detecte du vide alors on place en fonction du capteur qui a detecté le vide (gauche,droite,haut,bas)
@@ -165,7 +166,7 @@ public class Main extends Application {
             }
             //on remet l'etat du capteur a false
             robot.getCapteurs().get(4).setEtat(false);
-            //On a bien detecté du vide donc détection est à true
+            //on a bien detecté du vide donc détection est à true
             detection = true;
 
         }
@@ -185,7 +186,7 @@ public class Main extends Application {
     public boolean capteurObstacle(int x, int y, int positionCapteur) {
         Label elementObstacle = new Label("O");
         boolean detection = false;
-        //Appelle la fonction capteurObstacle pour savoir si le capteur detecte un obstacle en position (x,y)
+        //appelle la fonction capteurObstacle pour savoir si le capteur detecte un obstacle en position (x,y)
         robot.getCapteurs().get(positionCapteur).capteurCollision(x, y);
         if (robot.getCapteurs().get(positionCapteur).isEtat() == true) {
              /* si le capteur detecte un obstacle alors on place en fonction du capteur qui a detecté l'obstacle (gauche,droite,haut,bas)
@@ -209,9 +210,9 @@ public class Main extends Application {
                     break;
 
             }
-            //On remet l'etat du capteur a false
+            //on remet l'etat du capteur a false
             robot.getCapteurs().get(positionCapteur).setEtat(false);
-            //On a bien detecté un obstacle donc detection est à true
+            //on a bien detecté un obstacle donc detection est à true
             detection = true;
 
         }
@@ -221,21 +222,22 @@ public class Main extends Application {
 
     /**
      * Detection des tapis et aspiration
+     *
      * @param x
      * @param y
      * @param positionCapteur
      */
 
-    public void capteurTapis(int x, int y, int positionCapteur)  {
-        Label elementTapis=new Label("");
-        positionLabel(aspirationTapis,30,250);
+    public void capteurTapis(int x, int y, int positionCapteur) {
+        Label elementTapis = new Label("");
+        positionLabel(aspirationTapis, 30, 250);
         aspirationTapis.setVisible(false);
         int indice[] = robot.getCapteurs().get(positionCapteur).capteurTapis(x, y);
         int poussiere = indice[1]; //Quantité de poussière actuellement presente sur le tapis
         int poussiereAspire = poussiere - robot.getPuissanceAspiration(); //Quantité de poussiere qui va être aspiré
         int poussiereRestante = robot.getReserve().getTaille() - robot.getReserve().getQuantitePoussiere(); //Quantité de poussière restante dans le reservoir
         robot.getCapteurs().get(positionCapteur).setEtat(true);
-        //Appelle la fonction capteurTapis pour savoir si le capteur detecte un tapis en position (x,y)
+        //appelle la fonction capteurTapis pour savoir si le capteur detecte un tapis en position (x,y)
         robot.getCapteurs().get(positionCapteur).capteurTapis(x, y);
 
         if (!robot.getCapteurs().get(positionCapteur).isEtat()) {
@@ -249,31 +251,31 @@ public class Main extends Application {
                 if (poussiere < robot.getPuissanceAspiration()) {
                     if (poussiereRestante < poussiere - robot.getPuissanceAspiration()) {
                         int reste = poussiere - poussiereRestante;
-                        elementTapis.setText("T"+reste);
+                        elementTapis.setText("T" + reste);
                         robot.remplirReserve(poussiereRestante);
                         quantitePoussiere += poussiereRestante;
-                        //Mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
+                        //mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
                         robot.getPiece().getMatrice().get(indice[0]).setTypeElement("T" + reste);
                     } else {
-                        elementTapis.setText("T"+0);
+                        elementTapis.setText("T" + 0);
                         robot.remplirReserve(poussiere);
                         quantitePoussiere += poussiere;
-                        //Mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
+                        //mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
                         robot.getPiece().getMatrice().get(indice[0]).setTypeElement("T" + 0);
                     }
                 } else {
                     if (poussiereRestante < robot.getPuissanceAspiration()) {
                         int reste = poussiere - poussiereRestante;
-                        elementTapis.setText("T"+reste);
+                        elementTapis.setText("T" + reste);
                         robot.remplirReserve(poussiereRestante);
                         quantitePoussiere += poussiereRestante;
-                        //Mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
+                        //mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
                         robot.getPiece().getMatrice().get(indice[0]).setTypeElement("T" + reste);
                     } else {
-                        elementTapis.setText("T"+poussiereAspire);
+                        elementTapis.setText("T" + poussiereAspire);
                         robot.remplirReserve(robot.getPuissanceAspiration());
                         quantitePoussiere += robot.getPuissanceAspiration();
-                        //Mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
+                        //mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
                         robot.getPiece().getMatrice().get(indice[0]).setTypeElement("T" + poussiereAspire);
                     }
                 }
@@ -284,8 +286,8 @@ public class Main extends Application {
                 Timeline timer = new Timeline(
                         new KeyFrame(Duration.seconds(0.50), event -> {
                             gridpane.getChildren().remove(elementTapis2);
-                            //On regarde s'il n'y a pas un node qui occupe la case actuelle, si oui on le retire
-                            getNodeFromGridPane(gridpane,gridpane.getColumnIndex(aspirateur),gridpane.getRowIndex(aspirateur));
+                            //on regarde s'il n'y a pas un node qui occupe la case actuelle, si oui on le retire
+                            getNodeFromGridPane(gridpane, gridpane.getColumnIndex(aspirateur), gridpane.getRowIndex(aspirateur));
                             gridpane.add(elementTapis, gridpane.getColumnIndex(aspirateur), gridpane.getRowIndex(aspirateur));
                             aspirationTapis.setVisible(false);
                             etatReserve.setText("Etat de la Reserve:" + robot.getReserve().getQuantitePoussiere() + "/" + robot.getReserve().getTaille());
@@ -304,6 +306,7 @@ public class Main extends Application {
 
     /**
      * Detection des sols et aspiration
+     *
      * @param x
      * @param y
      * @param positionCapteur
@@ -311,8 +314,8 @@ public class Main extends Application {
 
 
     public void capteurSol(int x, int y, int positionCapteur) {
-        Label elementSol=new Label("");
-        positionLabel(aspirationSol,30,250);
+        Label elementSol = new Label("");
+        positionLabel(aspirationSol, 30, 250);
         aspirationSol.setVisible(false);
 
         int indice[] = robot.getCapteurs().get(positionCapteur).capteurSol(x, y);
@@ -320,7 +323,7 @@ public class Main extends Application {
         int poussiereAspire = poussiere - robot.getPuissanceAspiration();//Quantité de poussiere qui va être aspiré
         int poussiereRestante = robot.getReserve().getTaille() - robot.getReserve().getQuantitePoussiere();//Quantité de poussière restante dans le reservoir
         robot.getCapteurs().get(positionCapteur).setEtat(true);
-        //Appelle la fonction capteurTapis pour savoir si le capteur detecte un sol en position (x,y)
+        //appelle la fonction capteurTapis pour savoir si le capteur detecte un sol en position (x,y)
         robot.getCapteurs().get(positionCapteur).capteurSol(x, y);
 
         if (robot.getCapteurs().get(positionCapteur).isEtat() == false) {
@@ -337,13 +340,13 @@ public class Main extends Application {
                         elementSol.setText("0" + reste);
                         robot.remplirReserve(poussiereRestante);
                         quantitePoussiere += poussiereRestante;
-                        //Mise a jour du sol dans la piece avec sa nouvelle quantité de poussière
+                        //mise a jour du sol dans la piece avec sa nouvelle quantité de poussière
                         robot.getPiece().getMatrice().get(indice[0]).setTypeElement("0" + reste);
                     } else {
                         elementSol.setText("0" + 0);
                         robot.remplirReserve(poussiere);
                         quantitePoussiere += poussiere;
-                        //Mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
+                        //mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
                         robot.getPiece().getMatrice().get(indice[0]).setTypeElement("0" + 0);
                     }
                 } else {
@@ -352,13 +355,13 @@ public class Main extends Application {
                         elementSol.setText("0" + reste);
                         robot.remplirReserve(poussiereRestante);
                         quantitePoussiere += poussiereRestante;
-                        //Mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
+                        //mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
                         robot.getPiece().getMatrice().get(indice[0]).setTypeElement("0" + reste);
                     } else {
                         elementSol.setText("0" + poussiereAspire);
                         robot.remplirReserve(robot.getPuissanceAspiration());
                         quantitePoussiere += robot.getPuissanceAspiration();
-                        //Mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
+                        //mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
                         robot.getPiece().getMatrice().get(indice[0]).setTypeElement("0" + poussiereAspire);
                     }
                 }
@@ -367,8 +370,8 @@ public class Main extends Application {
                 Timeline timer = new Timeline(
                         new KeyFrame(Duration.seconds(0.50), event -> {
                             gridpane.getChildren().remove(elementSol2);
-                            //On regarde s'il n'y a pas un node qui occupe la case actuelle, si oui on le retire
-                            getNodeFromGridPane(gridpane,gridpane.getColumnIndex(aspirateur),gridpane.getRowIndex(aspirateur));
+                            //on regarde s'il n'y a pas un node qui occupe la case actuelle, si oui on le retire
+                            getNodeFromGridPane(gridpane, gridpane.getColumnIndex(aspirateur), gridpane.getRowIndex(aspirateur));
                             gridpane.add(elementSol, gridpane.getColumnIndex(aspirateur), gridpane.getRowIndex(aspirateur));
                             aspirationSol.setVisible(false);
                             etatReserve.setText("Etat de la Reserve:" + robot.getReserve().getQuantitePoussiere() + "/" + robot.getReserve().getTaille());
@@ -386,7 +389,7 @@ public class Main extends Application {
     /**
      * Ouvre une fenetre d'option pour modifier differentes valeurs
      */
-    public void option(){
+    public void option() {
 
         menu1.getItems().add(capaciteBatterie);
         barre.getMenus().add(menu1);
@@ -400,17 +403,17 @@ public class Main extends Application {
         capaciteBatterie.setOnAction(e -> {
             Pane option = new Pane();
 
-            option.getChildren().removeAll(labelSliderBatterie,labelSliderReserve,changeBatterie,changeReserve,optionBatterie,optionReserve);
-            option.getChildren().addAll(labelSliderBatterie,labelSliderReserve,changeBatterie,changeReserve,optionBatterie,optionReserve);
+            option.getChildren().removeAll(labelSliderBatterie, labelSliderReserve, changeBatterie, changeReserve, optionBatterie, optionReserve);
+            option.getChildren().addAll(labelSliderBatterie, labelSliderReserve, changeBatterie, changeReserve, optionBatterie, optionReserve);
 
-            //Affiche en temps reel la valeur du slider pour la batterie
+            //affiche en temps reel la valeur du slider pour la batterie
             changeBatterie.valueProperty().addListener((ChangeListener) (arg0, arg1, arg2) -> labelSliderBatterie.textProperty().setValue(
                     String.valueOf((int) changeBatterie.getValue())));
-            //Affiche en temps reel la valeur du slider pour la reserve
+            //affiche en temps reel la valeur du slider pour la reserve
             changeReserve.valueProperty().addListener((ChangeListener) (arg0, arg1, arg2) -> labelSliderReserve.textProperty().setValue(
                     String.valueOf((int) changeReserve.getValue())));
 
-            //Creation de la nouvelle fenetre d'option
+            //creation de la nouvelle fenetre d'option
             Scene secondScene = new Scene(option, 200, 200);
             Stage newWindow = new Stage();
             newWindow.setTitle("Options");
@@ -419,7 +422,7 @@ public class Main extends Application {
 
 
         });
-        //Changement en temps reel de la capacite de la batterie avec un slider
+        //changement en temps reel de la capacite de la batterie avec un slider
         changeBatterie.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
                                 Number old_val, Number new_val) {
@@ -429,7 +432,7 @@ public class Main extends Application {
 
             }
         });
-        //Changement en temps reel de la taille de la reserve avec un slider
+        //changement en temps reel de la taille de la reserve avec un slider
         changeReserve.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
                                 Number old_val, Number new_val) {
@@ -440,7 +443,6 @@ public class Main extends Application {
         });
 
 
-
     }
 
 
@@ -449,7 +451,7 @@ public class Main extends Application {
 
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
 
-        /*Construit les colonnes et les lignes du gridpane
+        /*construit les colonnes et les lignes du gridpane
         dont la taille sera la taille de la piece */
         for (int i = 0; i < piece.getMatrice().size() / 3; i++) {
             RowConstraints row = new RowConstraints(20);
@@ -462,16 +464,16 @@ public class Main extends Application {
             gridpane.getColumnConstraints().add(column);
         }
 
-        //Appelle la fonction capteurBase pour determiner la position de la Base
+        //appelle la fonction capteurBase pour determiner la position de la Base
         int[] positionBase = robot.getBase().getPresence().capteurBase();
-        //Fixe la position initial du robot sur la Base
+        //fixe la position initial du robot sur la Base
         gridpane.add(aspirateur, positionBase[1], positionBase[0]);
-        //Ajoute au gridpane l'element de la Base
+        //ajoute au gridpane l'element de la Base
         gridpane.add(elementBase, positionBase[1], positionBase[0]);
 
 
-        /*Fixe la position de tous les labels */
-        positionLabel(temps,400,5);
+        /*fixe la position de tous les labels */
+        positionLabel(temps, 400, 5);
         positionLabel(etatBatterie, 400, 20);
         positionLabel(etatReserve, 400, 40);
         positionLabel(atBase, 30, 250);
@@ -486,7 +488,7 @@ public class Main extends Application {
         positionLabel(labelSliderBatterie, 0, 30);
         positionLabel(labelSliderReserve, 0, 70);
 
-        //Appelle le menu
+        //appelle le menu
         option();
 
         AtomicBoolean etat = new AtomicBoolean(true);
@@ -508,9 +510,9 @@ public class Main extends Application {
 
         Scene scene = new Scene(pane, 500, 500);
 
-        /* Deplacement du robot en fonction de la touche pressé(haut,bas,gauche ou droite) */
+        /* deplacement du robot en fonction de la touche pressé (haut,bas,gauche ou droite) */
         scene.setOnKeyPressed(key -> {
-            //Le robot avance tant que sa batterie n'est pas vide
+            //le robot avance tant que sa batterie n'est pas vide
             if (!robot.batterieVide()) {
                 distanceParcourue += 1;
                 distance.setText("Distance parcourue par le robot :" + distanceParcourue);
@@ -518,21 +520,21 @@ public class Main extends Application {
                     case UP:
                         try {
                             if (gridpane.getRowIndex(aspirateur) > 0 && robot.getBase().getPresence().isEtat() == false) {
-                                //On regarde si le robot change de direction
+                                //on regarde si le robot change de direction
                                 if (index != gridpane.getRowIndex(aspirateur)) {
                                     robot.dechargerBatterie(2);
                                 } else {
                                     robot.dechargerBatterie(1);
                                 }
                                 gridpane.getChildren().remove(aspirateur);
-                                //Le robot met 0.25 secondes pour effectuer un mouvement
+                                //le robot met 0.25 secondes pour effectuer un mouvement
                                 TimeUnit.SECONDS.sleep((long) 0.25);
                                 etatBatterie.setText("Etat de la Batterie :" + robot.getBatterie().getEnergie() + "/" + robot.getBatterie().getCapacité());
                                 int colonne = gridpane.getColumnIndex(aspirateur);
                                 if (gridpane.getColumnIndex(aspirateur) != 0)
                                     colonne = gridpane.getColumnIndex(aspirateur) * 2;
 
-                                //On regarde si le robot detecte un obstacle, dans ce cas il n'avance pas
+                                //on regarde si le robot detecte un obstacle, dans ce cas il n'avance pas
                                 if (capteurObstacle(gridpane.getRowIndex(aspirateur) - 1, colonne, 0)) {
                                     gridpane.add(aspirateur, gridpane.getColumnIndex(aspirateur), gridpane.getRowIndex(aspirateur));
                                 } else {
@@ -655,18 +657,18 @@ public class Main extends Application {
                         }
                         break;
                 }
-                //Quand le robot a demarré son menage, il n'est plus possible d'acceder au menu des options
+                //quand le robot a demarré son menage, il n'est plus possible d'acceder au menu des options
                 if (gridpane.getRowIndex(aspirateur) != positionBase[0] || gridpane.getColumnIndex(aspirateur) != positionBase[1]) {
                     capaciteBatterie.setDisable(true);
                 }
-                //On regarde si le robot se trouve sur la base
+                //on regarde si le robot se trouve sur la base
                 if (etat.get() == true && gridpane.getRowIndex(aspirateur) == positionBase[0] && gridpane.getColumnIndex(aspirateur) == positionBase[1]) {
                     robot.getBase().getPresence().setEtat(true);
                     etat.set(false);
                     atBase.setVisible(true);
                     retourBase += 1;
                     nbreBase.setText("Nombre de fois où le robot est retourné à la base :" + retourBase);
-                    //On commence le processus de recharge de la batterie et de vidage du reservoir
+                    //on commence le processus de recharge de la batterie et de vidage du reservoir
                     new Thread(robot.getBase()).start();
                     Timeline timer = new Timeline(
                             new KeyFrame(Duration.seconds(5), event -> {
