@@ -6,24 +6,29 @@ package sample;
 /**
  * Classe Base
  */
-public class Base {
+public class Base extends Thread{
 
     /** Attributs */
     private Capteur presence;
-    private Robot robot;
+    private Batterie batterie;
+    private Reserve reserve;
     private int positionx;
     private int positiony;
+
+    public Base(Batterie batterie,Capteur presence,Reserve reserve){
+        this.batterie=batterie;
+        this.presence=presence;
+        this.reserve=reserve;
+    }
 
     /**
      * Constructor
      * @param presence
-     * @param robot
      * @param positionx
      * @param positiony
      */
-    public Base(Capteur presence,Robot robot, int positionx, int positiony) {
+    public Base(Capteur presence, int positionx, int positiony) {
         this.presence = presence;
-        this.robot=robot;
         this.positionx = positionx;
         this.positiony = positiony;
     }
@@ -36,28 +41,21 @@ public class Base {
         return presence;
     }
 
-    /**
-     * Accesseur position x
-     * @return x
-     */
-    public int getPositionx() {
-        return positionx;
+
+    public Batterie getBatterie() {
+        return batterie;
     }
 
-    /**
-     * Accesseur position y
-     * @return y
-     */
-    public int getPositiony() {
-        return positiony;
+    public Reserve getReserve() {
+        return reserve;
     }
 
-    public void recharge(){
-        if(getPresence().Etat==true){
-            robot.getBatterie().start();
-            robot.getReserve().start();
-        }
-        getPresence().setEtat(false);
+    public void run(){
+            if(getPresence().isEtat()==true) {
+                new Thread(this.getBatterie()).start();
+                new Thread(this.getReserve()).start();
+            }
+
     }
 
 }

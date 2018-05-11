@@ -3,21 +3,23 @@
  */
 package sample;
 
+import javafx.scene.control.Label;
+
 import java.util.concurrent.TimeUnit;
 
-public class Batterie extends Thread{
+public class Batterie extends Thread {
 
     private int capacité;
     private int energie;
 
     /**
      * Constructor
+     *
      * @param capacité
-     * @param energie
      */
-    public Batterie(int capacité,int energie) {
+    public Batterie(int capacité) {
         this.capacité = capacité;
-        this.energie=capacité;
+        this.energie = capacité;
     }
 
     public int getCapacité() {
@@ -36,16 +38,18 @@ public class Batterie extends Thread{
         this.energie = energie;
     }
 
-    public void recharge(){
-        setEnergie(getCapacité());
+    public void recharge() {
+        this.setEnergie(getCapacité());
     }
 
-    public void run(){
+    public void run() {
         try {
             TimeUnit.SECONDS.sleep((long) 5);
+            recharge();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        recharge();
+
+
     }
 }

@@ -12,9 +12,11 @@ public class Reserve extends Thread{
 
     /** Attributs */
     private int taille;
+    private int quantitePoussiere;
 
     public Reserve(int taille) {
         this.taille = taille;
+        this.quantitePoussiere=0;
     }
 
     public int getTaille() {
@@ -25,16 +27,25 @@ public class Reserve extends Thread{
         this.taille = taille;
     }
 
+    public int getQuantitePoussiere() {
+        return quantitePoussiere;
+    }
+
+    public void setQuantitePoussiere(int quantitePoussiere) {
+        this.quantitePoussiere = quantitePoussiere;
+    }
+
     public void vidage(){
-        this.taille=0;
+        this.quantitePoussiere=0;
     }
 
     public void run(){
         try {
             TimeUnit.SECONDS.sleep((long) 2);
+            vidage();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        vidage();
+
     }
 }
