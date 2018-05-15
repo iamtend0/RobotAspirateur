@@ -9,6 +9,9 @@ import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -59,13 +62,19 @@ public class Main extends Application {
     Pane pane = new Pane();
     GridPane gridpane = new GridPane();
 
-    /* Declaration des Sprites */
 
+    //declaration sprite du robot
     Image a = new Image("File:Sprite/Idle.png");
     ImageView aspirateur = new ImageView(a);
 
-    /* Declaration de tous les labels */
-    Label elementBase = new Label("BB");
+
+    //declaration sprite du tapis
+    Image l = new Image("File:Sprite/BB.png");
+    ImageView baseRobot = new ImageView(l);
+
+
+    /* Declaration des labels */
+    Label elementBase = new Label("");
     Label elementTapis2 = new Label(" ");
     Label elementSol2 = new Label(" ");
     Label aspirationTapis = new Label("Aspiration en cours du tapis...");
@@ -89,7 +98,8 @@ public class Main extends Application {
     Menu menu1 = new Menu("Option");
     MenuBar barre = new MenuBar();
 
-    Alert alertBatterie= new Alert(Alert.AlertType.INFORMATION,"La batterie est vide");
+    /* Alerte pour Batterie vide et fin du menage */
+    Alert alertBatterie = new Alert(Alert.AlertType.INFORMATION, "La batterie est vide");
 
 
     /**
@@ -140,7 +150,11 @@ public class Main extends Application {
      */
 
     public boolean capteurVide(int x, int y, int positionCapteur) {
-        Label elementVide = new Label("V");
+        Label elementVide = new Label("");
+        //declaration sprite vide
+        Image z = new Image("File:Sprite/VV.png");
+        ImageView vide = new ImageView(z);
+        elementVide.setGraphic(vide);
         boolean detection = false;
         //appelle la fonction capteurVide pour savoir si le capteur detecte du vide en position (x,y)...
         robot.getCapteurs().get(4).capteurVide(x, y);
@@ -186,7 +200,11 @@ public class Main extends Application {
      */
 
     public boolean capteurObstacle(int x, int y, int positionCapteur) {
-        Label elementObstacle = new Label("O");
+        Label elementObstacle = new Label("");
+        //declaration sprite obstacle
+        Image m = new Image("File:Sprite/OO.png");
+        ImageView obstacle = new ImageView(m);
+        elementObstacle.setGraphic(obstacle);
         boolean detection = false;
         //appelle la fonction capteurObstacle pour savoir si le capteur detecte un obstacle en position (x,y)
         robot.getCapteurs().get(positionCapteur).capteurCollision(x, y);
@@ -223,6 +241,128 @@ public class Main extends Application {
     }
 
     /**
+     * Affiche le sprite du sol correspondant au niveau de poussiere(1,2,3...)
+     *
+     * @param poussiere
+     * @param sol
+     */
+    public void spriteSol(int poussiere, Label sol) {
+        switch (poussiere) {
+            case 0:
+                Image b = new Image("File:Sprite/00.jpg");
+                ImageView sol0 = new ImageView(b);
+                sol.setGraphic(sol0);
+                break;
+            case 1:
+                Image c = new Image("File:Sprite/01.jpg");
+                ImageView sol1 = new ImageView(c);
+                sol.setGraphic(sol1);
+                break;
+            case 2:
+                Image d = new Image("File:Sprite/02.jpg");
+                ImageView sol2 = new ImageView(d);
+                sol.setGraphic(sol2);
+                break;
+            case 3:
+                Image e = new Image("File:Sprite/03.jpg");
+                ImageView sol3 = new ImageView(e);
+                sol.setGraphic(sol3);
+                break;
+            case 4:
+                Image f = new Image("File:Sprite/04.jpg");
+                ImageView sol4 = new ImageView(f);
+                sol.setGraphic(sol4);
+                break;
+            case 5:
+                Image g = new Image("File:Sprite/05.jpg");
+                ImageView sol5 = new ImageView(g);
+                sol.setGraphic(sol5);
+                break;
+            case 6:
+                Image h = new Image("File:Sprite/06.jpg");
+                ImageView sol6 = new ImageView(h);
+                sol.setGraphic(sol6);
+                break;
+            case 7:
+                Image i = new Image("File:Sprite/07.jpg");
+                ImageView sol7 = new ImageView(i);
+                sol.setGraphic(sol7);
+                break;
+            case 8:
+                Image j = new Image("File:Sprite/08.jpg");
+                ImageView sol8 = new ImageView(j);
+                sol.setGraphic(sol8);
+                break;
+            case 9:
+                Image k = new Image("File:Sprite/09.jpg");
+                ImageView sol9 = new ImageView(k);
+                sol.setGraphic(sol9);
+                break;
+        }
+    }
+
+    /**
+     * Affiche le sprite du tapis correspondant au niveau de poussiere(1,2,3...)
+     *
+     * @param poussiere
+     * @param tapis
+     */
+    public void spriteTapis(int poussiere, Label tapis) {
+        switch (poussiere) {
+            case 0:
+                Image b = new Image("File:Sprite/t0.png");
+                ImageView tapis0 = new ImageView(b);
+                tapis.setGraphic(tapis0);
+                break;
+            case 1:
+                Image c = new Image("File:Sprite/t1.png");
+                ImageView tapis1 = new ImageView(c);
+                tapis.setGraphic(tapis1);
+                break;
+            case 2:
+                Image d = new Image("File:Sprite/t2.png");
+                ImageView tapis2 = new ImageView(d);
+                tapis.setGraphic(tapis2);
+                break;
+            case 3:
+                Image e = new Image("File:Sprite/t3.png");
+                ImageView tapis3 = new ImageView(e);
+                tapis.setGraphic(tapis3);
+                break;
+            case 4:
+                Image f = new Image("File:Sprite/t4.png");
+                ImageView tapis4 = new ImageView(f);
+                tapis.setGraphic(tapis4);
+                break;
+            case 5:
+                Image g = new Image("File:Sprite/t5.png");
+                ImageView tapis5 = new ImageView(g);
+                tapis.setGraphic(tapis5);
+                break;
+            case 6:
+                Image h = new Image("File:Sprite/t6.png");
+                ImageView tapis6 = new ImageView(h);
+                tapis.setGraphic(tapis6);
+                break;
+            case 7:
+                Image i = new Image("File:Sprite/t7.png");
+                ImageView tapis7 = new ImageView(i);
+                tapis.setGraphic(tapis7);
+                break;
+            case 8:
+                Image j = new Image("File:Sprite/t8.png");
+                ImageView tapis8 = new ImageView(j);
+                tapis.setGraphic(tapis8);
+                break;
+            case 9:
+                Image k = new Image("File:Sprite/t9.png");
+                ImageView tapis9 = new ImageView(k);
+                tapis.setGraphic(tapis9);
+                break;
+        }
+    }
+
+    /**
      * Detection des tapis et aspiration
      *
      * @param x
@@ -244,24 +384,28 @@ public class Main extends Application {
 
         if (!robot.getCapteurs().get(positionCapteur).isEtat()) {
             gridpane.getChildren().remove(elementTapis2);
-            elementTapis2.setText("T" + poussiere);
+            spriteTapis(poussiere, elementTapis2);
             gridpane.add(elementTapis2, gridpane.getColumnIndex(aspirateur), gridpane.getRowIndex(aspirateur));
-            //on decharge la batterie car le robot aspire
-            if(robot.getBatterie().getEnergie()-1<0 ) {
+            gridpane.getChildren().remove(aspirateur);
+            gridpane.add(aspirateur, gridpane.getColumnIndex(elementTapis2), gridpane.getRowIndex(elementTapis2));
+
+            //on regarde si le robot possede assez de batterie pour aspirer le tapis
+            if (robot.getBatterie().getEnergie() - 1 < 0) {
                 robot.getBatterie().setEnergie(0);
+                //affiche une alerte batterie vide
                 alertBatterie.showAndWait();
                 return;
-            }
-            else
+            } else
+                //on decharge la batterie car le robot aspire
                 robot.dechargerBatterie(1);
 
-            //on decharge la batterie car le robot est sur un tapis
-            if(robot.getBatterie().getEnergie()-1.5<0) {
+            //on regarde si le robot possede assez de batterie pour se deplacer sur le tapis
+            if (robot.getBatterie().getEnergie() - 1.5 < 0) {
                 robot.getBatterie().setEnergie(0);
                 alertBatterie.showAndWait();
                 return;
-            }
-            else
+            } else
+                //on decharge la batterie car le robot est sur un tapis
                 robot.dechargerBatterie((float) 1.5);
 
             /* le capteur a detecte un tapis que le robot va aspirer si son reservoir n'est pas plein et s'il reste de la poussiere
@@ -271,13 +415,13 @@ public class Main extends Application {
                 if (poussiere < robot.getPuissanceAspiration()) {
                     if (poussiereRestante < poussiere - robot.getPuissanceAspiration()) {
                         int reste = poussiere - poussiereRestante;
-                        elementTapis.setText("T" + reste);
+                        spriteTapis(reste,elementTapis);
                         robot.remplirReserve(poussiereRestante);
                         quantitePoussiere += poussiereRestante;
                         //mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
                         robot.getPiece().getMatrice().get(indice[0]).setTypeElement("T" + reste);
                     } else {
-                        elementTapis.setText("T" + 0);
+                        spriteTapis(0,elementTapis);
                         robot.remplirReserve(poussiere);
                         quantitePoussiere += poussiere;
                         //mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
@@ -286,13 +430,13 @@ public class Main extends Application {
                 } else {
                     if (poussiereRestante < robot.getPuissanceAspiration()) {
                         int reste = poussiere - poussiereRestante;
-                        elementTapis.setText("T" + reste);
+                        spriteTapis(reste,elementTapis);
                         robot.remplirReserve(poussiereRestante);
                         quantitePoussiere += poussiereRestante;
                         //mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
                         robot.getPiece().getMatrice().get(indice[0]).setTypeElement("T" + reste);
                     } else {
-                        elementTapis.setText("T" + poussiereAspire);
+                        spriteTapis(poussiereAspire,elementTapis);
                         robot.remplirReserve(robot.getPuissanceAspiration());
                         quantitePoussiere += robot.getPuissanceAspiration();
                         //mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
@@ -310,6 +454,8 @@ public class Main extends Application {
                             getNodeFromGridPane(gridpane, gridpane.getColumnIndex(aspirateur), gridpane.getRowIndex(aspirateur));
                             gridpane.add(elementTapis, gridpane.getColumnIndex(aspirateur), gridpane.getRowIndex(aspirateur));
                             aspirationTapis.setVisible(false);
+                            gridpane.getChildren().remove(aspirateur);
+                            gridpane.add(aspirateur, gridpane.getColumnIndex(elementTapis), gridpane.getRowIndex(elementTapis));
                             etatBatterie.setText("Etat de la Batterie :" + robot.getBatterie().getEnergie() + "/" + robot.getBatterie().getCapacité());
                             etatReserve.setText("Etat de la Reserve:" + robot.getReserve().getQuantitePoussiere() + "/" + robot.getReserve().getTaille());
                             poussiereRamasse.setText("Quantité de poussière aspirée :" + quantitePoussiere);
@@ -346,57 +492,59 @@ public class Main extends Application {
         robot.getCapteurs().get(positionCapteur).setEtat(true);
         //appelle la fonction capteurSol pour savoir si le capteur detecte un sol en position (x,y)
         robot.getCapteurs().get(positionCapteur).capteurSol(x, y);
+        //on regarde si le capteur detecte un sol
         if (robot.getCapteurs().get(positionCapteur).isEtat() == false) {
             gridpane.getChildren().remove(elementSol2);
-            elementSol2.setText("T" + poussiere);
+            spriteSol(poussiere, elementSol2);
             gridpane.add(elementSol2, gridpane.getColumnIndex(aspirateur), gridpane.getRowIndex(aspirateur));
+            gridpane.getChildren().remove(aspirateur);
+            gridpane.add(aspirateur, gridpane.getColumnIndex(elementSol2), gridpane.getRowIndex(elementSol2));
 
-            elementSol2.setText("0" + poussiere);
-
-            if(robot.getBatterie().getEnergie()-1<0 ) {
+            //on regarde si le robot possede encore assez de batterie pour aspirer le sol
+            if (robot.getBatterie().getEnergie() - 1 < 0) {
                 robot.getBatterie().setEnergie(0);
+                //affiche une alerte batterie vide
                 alertBatterie.showAndWait();
                 return;
-            }
-            else
+            } else
+                //on decharge la batterie car le robot aspire
                 robot.dechargerBatterie(1);
+
             /* le capteur a detecte un sol que le robot va aspirer si son reservoir n'est pas plein et s'il reste de la poussiere
             sur ce sol. Le robot devra repasser sur le sol s'il n'a pas pu aspirer toute la poussière */
             if (poussiere != 0 && poussiereRestante != 0) {
                 if (poussiere < robot.getPuissanceAspiration()) {
                     if (poussiereRestante < poussiere - robot.getPuissanceAspiration()) {
                         int reste = poussiere - poussiereRestante;
-                        elementSol.setText("0" + reste);
+                        spriteSol(reste, elementSol);
                         robot.remplirReserve(poussiereRestante);
                         quantitePoussiere += poussiereRestante;
                         //mise a jour du sol dans la piece avec sa nouvelle quantité de poussière
                         robot.getPiece().getMatrice().get(indice[0]).setTypeElement("0" + reste);
                     } else {
-                        elementSol.setText("0" + 0);
+                        spriteSol(0, elementSol);
                         robot.remplirReserve(poussiere);
                         quantitePoussiere += poussiere;
-                        //mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
+                        //mise a jour du sol dans la piece avec sa nouvelle quantité de poussière
                         robot.getPiece().getMatrice().get(indice[0]).setTypeElement("0" + 0);
                     }
                 } else {
                     if (poussiereRestante < robot.getPuissanceAspiration()) {
                         int reste = poussiere - poussiereRestante;
-                        elementSol.setText("0" + reste);
+                        spriteSol(reste, elementSol);
                         robot.remplirReserve(poussiereRestante);
                         quantitePoussiere += poussiereRestante;
-                        //mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
+                        //mise a jour du sol dans la piece avec sa nouvelle quantité de poussière
                         robot.getPiece().getMatrice().get(indice[0]).setTypeElement("0" + reste);
                     } else {
-                        elementSol.setText("0" + poussiereAspire);
+                        spriteSol(poussiereAspire, elementSol);
                         robot.remplirReserve(robot.getPuissanceAspiration());
                         quantitePoussiere += robot.getPuissanceAspiration();
-                        //mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
+                        //mise a jour du sol dans la piece avec sa nouvelle quantité de poussière
                         robot.getPiece().getMatrice().get(indice[0]).setTypeElement("0" + poussiereAspire);
                     }
                 }
                 aspirationSol.setVisible(true);
-                //on decharge la batterie car le robot aspire
-                robot.dechargerBatterie(1);
                 //timer qui fixe le temps de l'aspiration à 0.50 secondes
                 Timeline timer = new Timeline(
                         new KeyFrame(Duration.seconds(0.50), event -> {
@@ -405,6 +553,8 @@ public class Main extends Application {
                             getNodeFromGridPane(gridpane, gridpane.getColumnIndex(aspirateur), gridpane.getRowIndex(aspirateur));
                             gridpane.add(elementSol, gridpane.getColumnIndex(aspirateur), gridpane.getRowIndex(aspirateur));
                             aspirationSol.setVisible(false);
+                            gridpane.getChildren().remove(aspirateur);
+                            gridpane.add(aspirateur, gridpane.getColumnIndex(elementSol), gridpane.getRowIndex(elementSol));
                             etatBatterie.setText("Etat de la Batterie :" + robot.getBatterie().getEnergie() + "/" + robot.getBatterie().getCapacité());
                             etatReserve.setText("Etat de la Reserve:" + robot.getReserve().getQuantitePoussiere() + "/" + robot.getReserve().getTaille());
                             poussiereRamasse.setText("Quantité de poussière aspirée :" + quantitePoussiere);
@@ -483,42 +633,49 @@ public class Main extends Application {
 
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
 
+        gridpane.setPrefSize(400, 400);
+
         /*construit les colonnes et les lignes du gridpane
         dont la taille sera la taille de la piece */
         for (int i = 0; i < piece.getNblignes(); i++) {
-            RowConstraints row = new RowConstraints(20);
-            row.setPercentHeight(50);
+            RowConstraints row = new RowConstraints(100);
             gridpane.getRowConstraints().add(row);
         }
         for (int i = 0; i < piece.getNbcolonnes(); i++) {
-            ColumnConstraints column = new ColumnConstraints(20);
-            column.setPercentWidth(50);
+            ColumnConstraints column = new ColumnConstraints(100);
             gridpane.getColumnConstraints().add(column);
         }
+
+        /* fixe le sprite de la base au label */
+        elementBase.setGraphic(baseRobot);
 
         //appelle la fonction capteurBase pour determiner la position de la Base
         int[] positionBase = robot.getBase().getPresence().capteurBase();
         //fixe la position initial du robot sur la Base
         gridpane.add(aspirateur, positionBase[1], positionBase[0]);
+        //centre le robot sur la case
+        gridpane.setHalignment(aspirateur, HPos.CENTER);
+        gridpane.setValignment(aspirateur, VPos.CENTER);
         //ajoute au gridpane l'element de la Base
         gridpane.add(elementBase, positionBase[1], positionBase[0]);
 
 
         /*fixe la position de tous les labels */
-        positionLabel(temps, 400, 5);
-        positionLabel(etatBatterie, 400, 20);
-        positionLabel(etatReserve, 400, 40);
+        positionLabel(temps, (int) (gridpane.getPrefWidth() + 10), 5);
+        positionLabel(etatBatterie, (int) (gridpane.getPrefWidth() + 10), 20);
+        positionLabel(etatReserve, (int) (gridpane.getPrefWidth() + 10), 40);
         positionLabel(atBase, 30, 250);
         atBase.setVisible(false);
         aspirationTapis.setVisible(false);
         aspirationSol.setVisible(false);
-        positionLabel(distance, 400, 60);
-        positionLabel(nbreBase, 400, 80);
-        positionLabel(poussiereRamasse, 400, 100);
+        positionLabel(distance, (int) (gridpane.getPrefWidth() + 10), 60);
+        positionLabel(nbreBase, (int) (gridpane.getPrefWidth() + 10), 80);
+        positionLabel(poussiereRamasse, (int) (gridpane.getPrefWidth() + 10), 100);
         positionLabel(optionBatterie, 0, 0);
         positionLabel(optionReserve, 0, 45);
         positionLabel(labelSliderBatterie, 0, 30);
         positionLabel(labelSliderReserve, 0, 70);
+
 
         //appelle le menu
         option();
@@ -526,7 +683,6 @@ public class Main extends Application {
         AtomicBoolean etat = new AtomicBoolean(true);
         //afficher la grille pour le debug
         //gridpane.setGridLinesVisible(true);
-        gridpane.setPrefSize(200, 200);
 
         pane.getChildren().add(temps);
         pane.getChildren().add(aspirationTapis);
@@ -541,9 +697,7 @@ public class Main extends Application {
         pane.getChildren().add(gridpane);
 
 
-        Scene scene = new Scene(pane, 500, 500);
-
-
+        Scene scene = new Scene(pane, 1000, 1000);
 
         /* deplacement du robot en fonction de la touche pressé (haut,bas,gauche ou droite) */
         scene.setOnKeyPressed(key -> {
@@ -557,24 +711,25 @@ public class Main extends Application {
                             if (gridpane.getRowIndex(aspirateur) > 0 && robot.getBase().getPresence().isEtat() == false) {
                                 //on regarde si le robot change de direction
                                 if (index != gridpane.getRowIndex(aspirateur)) {
-                                    if(robot.getBatterie().getEnergie()-2<0){
+                                    //on regarde si le robot possede assez de batterie pour avancer
+                                    if (robot.getBatterie().getEnergie() - 2 < 0) {
                                         robot.getBatterie().setEnergie(0);
                                         alertBatterie.showAndWait();
                                         break;
-                                    }
-
-                                    else{
+                                    } else {
+                                        //on decharge le robot car il a change de direction
                                         robot.dechargerBatterie(2);
                                     }
 
                                 } else {
-                                    if(robot.getBatterie().getEnergie()-1 <0) {
+                                    //on regarde si le robot possede assez de batterie pour avancer
+                                    if (robot.getBatterie().getEnergie() - 1 < 0) {
                                         robot.getBatterie().setEnergie(0);
                                         alertBatterie.showAndWait();
                                         break;
-                                    }
-                                    else
-                                    robot.dechargerBatterie(1);
+                                    } else
+                                        //on decharge le robot car il avance
+                                        robot.dechargerBatterie(1);
                                 }
                                 gridpane.getChildren().remove(aspirateur);
                                 //le robot met 0.25 secondes pour effectuer un mouvement
@@ -609,23 +764,20 @@ public class Main extends Application {
                         try {
                             if (gridpane.getRowIndex(aspirateur) < (piece.getMatrice().size() / 3) - 1 && robot.getBase().getPresence().isEtat() == false) {
                                 if (index != gridpane.getRowIndex(aspirateur)) {
-                                    if(robot.getBatterie().getEnergie()-2<0){
+                                    if (robot.getBatterie().getEnergie() - 2 < 0) {
                                         alertBatterie.showAndWait();
                                         robot.getBatterie().setEnergie(0);
                                         break;
-                                    }
-
-                                    else{
+                                    } else {
                                         robot.dechargerBatterie(2);
                                     }
 
                                 } else {
-                                    if(robot.getBatterie().getEnergie()-1 <0) {
+                                    if (robot.getBatterie().getEnergie() - 1 < 0) {
                                         alertBatterie.showAndWait();
                                         robot.getBatterie().setEnergie(0);
                                         break;
-                                    }
-                                    else
+                                    } else
                                         robot.dechargerBatterie(1);
                                 }
                                 gridpane.getChildren().remove(aspirateur);
@@ -655,23 +807,20 @@ public class Main extends Application {
                         try {
                             if (gridpane.getColumnIndex(aspirateur) > 0 && robot.getBase().getPresence().isEtat() == false) {
                                 if (index != gridpane.getColumnIndex(aspirateur)) {
-                                    if(robot.getBatterie().getEnergie()-2<0){
+                                    if (robot.getBatterie().getEnergie() - 2 < 0) {
                                         robot.getBatterie().setEnergie(0);
                                         alertBatterie.showAndWait();
                                         break;
-                                    }
-
-                                    else{
+                                    } else {
                                         robot.dechargerBatterie(2);
                                     }
 
                                 } else {
-                                    if(robot.getBatterie().getEnergie()-1 <0) {
+                                    if (robot.getBatterie().getEnergie() - 1 < 0) {
                                         alertBatterie.showAndWait();
                                         robot.getBatterie().setEnergie(0);
                                         break;
-                                    }
-                                    else
+                                    } else
                                         robot.dechargerBatterie(1);
                                 }
                                 gridpane.getChildren().remove(aspirateur);
@@ -705,23 +854,20 @@ public class Main extends Application {
                         try {
                             if (gridpane.getColumnIndex(aspirateur) < (piece.getMatrice().size() / 4) - 1 && robot.getBase().getPresence().isEtat() == false) {
                                 if (index != gridpane.getColumnIndex(aspirateur)) {
-                                    if(robot.getBatterie().getEnergie()-2<0){
+                                    if (robot.getBatterie().getEnergie() - 2 < 0) {
                                         alertBatterie.showAndWait();
                                         robot.getBatterie().setEnergie(0);
                                         break;
-                                    }
-
-                                    else{
+                                    } else {
                                         robot.dechargerBatterie(2);
                                     }
 
                                 } else {
-                                    if(robot.getBatterie().getEnergie()-1 <0) {
+                                    if (robot.getBatterie().getEnergie() - 1 < 0) {
                                         alertBatterie.showAndWait();
                                         robot.getBatterie().setEnergie(0);
                                         break;
-                                    }
-                                    else
+                                    } else
                                         robot.dechargerBatterie(1);
                                 }
                                 gridpane.getChildren().remove(aspirateur);
@@ -785,7 +931,9 @@ public class Main extends Application {
 
                 }
             }
-            if(robot.batterieVide()){
+            //on regarde si la batterie du robot est vide
+            if (robot.batterieVide()) {
+                //on affiche une alerte batterie vide
                 alertBatterie.showAndWait();
             }
         });
