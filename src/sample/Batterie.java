@@ -14,8 +14,8 @@ public class Batterie extends Thread {
     /**
      * Attributs
      */
-    private int capacité;
-    private int energie;
+    private float capacité;
+    private float energie;
 
     /**
      * Constructeur de la batterie
@@ -32,7 +32,7 @@ public class Batterie extends Thread {
      *
      * @return capacite
      */
-    public int getCapacité() {
+    public float getCapacité() {
         return capacité;
     }
 
@@ -41,7 +41,7 @@ public class Batterie extends Thread {
      *
      * @param capacité
      */
-    public void setCapacité(int capacité) {
+    public void setCapacité(float capacité) {
         this.capacité = capacité;
     }
 
@@ -50,7 +50,7 @@ public class Batterie extends Thread {
      *
      * @return energie
      */
-    public int getEnergie() {
+    public float getEnergie() {
         return energie;
     }
 
@@ -59,7 +59,7 @@ public class Batterie extends Thread {
      *
      * @param energie
      */
-    public void setEnergie(int energie) {
+    public void setEnergie(float energie) {
         this.energie = energie;
     }
 

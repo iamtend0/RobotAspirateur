@@ -156,12 +156,14 @@ public class Robot {
      *
      * @param taux
      */
-    public void dechargerBatterie(int taux) {
-        if (taux == 2) {
-            this.getBatterie().setEnergie(getBatterie().getEnergie() - 2);
-        } else {
-            this.getBatterie().setEnergie(getBatterie().getEnergie() - 1);
-        }
+    public void dechargerBatterie(float taux) {
+        if(taux ==1)
+            this.getBatterie().setEnergie(this.getBatterie().getEnergie()-1);
+        if(taux ==2)
+            this.getBatterie().setEnergie(this.getBatterie().getEnergie()-2);
+        if(taux == 1.5)
+            this.getBatterie().setEnergie((float) (this.getBatterie().getEnergie()-1.5));
+
     }
 
     /**
