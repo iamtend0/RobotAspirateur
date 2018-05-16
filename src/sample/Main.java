@@ -456,7 +456,7 @@ public class Main extends Application {
                         new KeyFrame(Duration.seconds(0.50), event -> {
                             gridpane.getChildren().remove(elementTapis2);
                             //on regarde s'il n'y a pas un node qui occupe la case actuelle, si oui on le retire
-                            getNodeFromGridPane(gridpane, gridpane.getColumnIndex(aspirateur), gridpane.getRowIndex(aspirateur));
+                            //getNodeFromGridPane(gridpane, gridpane.getColumnIndex(aspirateur), gridpane.getRowIndex(aspirateur));
                             gridpane.add(elementTapis, gridpane.getColumnIndex(aspirateur), gridpane.getRowIndex(aspirateur));
                             aspirationTapis.setVisible(false);
                             gridpane.getChildren().remove(aspirateur);
@@ -555,7 +555,7 @@ public class Main extends Application {
                         new KeyFrame(Duration.seconds(0.50), event -> {
                             gridpane.getChildren().remove(elementSol2);
                             //on regarde s'il n'y a pas un node qui occupe la case actuelle, si oui on le retire
-                            getNodeFromGridPane(gridpane, gridpane.getColumnIndex(aspirateur), gridpane.getRowIndex(aspirateur));
+                            //getNodeFromGridPane(gridpane, gridpane.getColumnIndex(aspirateur), gridpane.getRowIndex(aspirateur));
                             gridpane.add(elementSol, gridpane.getColumnIndex(aspirateur), gridpane.getRowIndex(aspirateur));
                             aspirationSol.setVisible(false);
                             gridpane.getChildren().remove(aspirateur);
@@ -637,7 +637,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
 
-        gridpane.setPrefSize(400, 400);
+        gridpane.setPrefSize(990, 990);
 
         ProgressBar progressBar = new ProgressBar();
         progressBar.setTranslateY((int) (gridpane.getPrefHeight() + 20));
@@ -878,8 +878,7 @@ public class Main extends Application {
                                 TimeUnit.SECONDS.sleep((long) 0.25);
                                 etatBatterie.setText("Etat de la Batterie :" + robot.getBatterie().getEnergie() + "/" + robot.getBatterie().getCapacité());
                                 int colonne = gridpane.getColumnIndex(aspirateur);
-                                if (gridpane.getColumnIndex(aspirateur) % 2 != 0)
-                                    colonne = gridpane.getColumnIndex(aspirateur) - 1;
+                                colonne=gridpane.getColumnIndex(aspirateur)+(gridpane.getColumnIndex(aspirateur)-2);
 
                                 if (capteurObstacle(gridpane.getRowIndex(aspirateur), colonne, 1)) {
                                     gridpane.add(aspirateur, gridpane.getColumnIndex(aspirateur), gridpane.getRowIndex(aspirateur));
@@ -921,25 +920,25 @@ public class Main extends Application {
                                     } else
                                         robot.dechargerBatterie(1);
                                 }
-                                gridpane.getChildren().remove(aspirateur);
                                 TimeUnit.SECONDS.sleep((long) 0.25);
                                 etatBatterie.setText("Etat de la Batterie :" + robot.getBatterie().getEnergie() + "/" + robot.getBatterie().getCapacité());
 
                                 int colonne = gridpane.getColumnIndex(aspirateur);
-                                if (gridpane.getColumnIndex(aspirateur) % 2 == 0)
-                                    colonne = gridpane.getColumnIndex(aspirateur) + 1;
-                                else
-                                    colonne = gridpane.getColumnIndex(aspirateur) + 2;
+                                if(gridpane.getColumnIndex(aspirateur)==0)
+                                    colonne=gridpane.getColumnIndex(aspirateur)+2;
+                                if(gridpane.getColumnIndex(aspirateur)!=0)
+                                    colonne=gridpane.getColumnIndex(aspirateur)+(gridpane.getColumnIndex(aspirateur)+2);
 
-                                if (capteurObstacle(gridpane.getRowIndex(aspirateur), colonne + 1, 2)) {
+                                if (capteurObstacle(gridpane.getRowIndex(aspirateur), colonne , 2)) {
                                     gridpane.add(aspirateur, gridpane.getColumnIndex(aspirateur), gridpane.getRowIndex(aspirateur));
                                 } else {
-                                    if (capteurVide(gridpane.getRowIndex(aspirateur), colonne + 1, 2)) {
+                                    if (capteurVide(gridpane.getRowIndex(aspirateur), colonne , 2)) {
                                         gridpane.add(aspirateur, gridpane.getColumnIndex(aspirateur), gridpane.getRowIndex(aspirateur));
                                     } else {
+                                        gridpane.getChildren().remove(aspirateur);
                                         gridpane.add(aspirateur, gridpane.getColumnIndex(aspirateur) + 1, gridpane.getRowIndex(aspirateur));
-                                        capteurTapis(gridpane.getRowIndex(aspirateur), colonne + 1, 2);
-                                        capteurSol(gridpane.getRowIndex(aspirateur), colonne + 1, 2);
+                                        capteurTapis(gridpane.getRowIndex(aspirateur), colonne , 2);
+                                        capteurSol(gridpane.getRowIndex(aspirateur), colonne , 2);
                                     }
                                 }
                                 index = gridpane.getColumnIndex(aspirateur);
