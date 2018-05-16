@@ -3,129 +3,185 @@
  */
 package sample;
 
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
+import java.util.ArrayList;
+
+/**
+ * Classe Robot
+ */
 public class Robot {
 
-    /* Coordonnées du robot */
-    private int positionx;
-    private int positiony;
-
+    /**
+     * Attributs
+     */
     private Batterie batterie;
     private Reserve reserve;
-    private Direction deplacements;
-    private ArrayList<Capteur> capteur = new ArrayList<Capteur>(5);
-    private Base base;
-    private Piece piece;
-    private boolean aspiration;
+    private ArrayList<Capteur> capteurs = new ArrayList<Capteur>(5); //liste des capteurs du robot
+    private Base base; //base du robot
+    private Piece piece; //piece pour le robot
+    private int puissanceAspiration; //puissance d'aspiration de la poussière par le robot
 
-    public Robot(Batterie batterie, Reserve reserve, Direction deplacements, ArrayList<Capteur> capteur, Base base, Piece piece, boolean aspiration) {
-        this.positionx = base.getPositionx();
-        this.positiony = base.getPositiony();
+
+    /**
+     * Constructeur de robot
+     *
+     * @param batterie
+     * @param reserve
+     * @param base
+     * @param piece
+     * @param puissanceAspiration
+     */
+    public Robot(Batterie batterie, Reserve reserve, Base base, Piece piece, int puissanceAspiration) {
         this.batterie = batterie;
         this.reserve = reserve;
-        this.deplacements = deplacements;
-        this.capteur = capteur;
+        for (int i = 0; i < 5; i++) {
+            capteurs.add(new Capteur(piece, false));
+        }
         this.base = base;
         this.piece = piece;
-        this.aspiration = aspiration;
+        this.puissanceAspiration = puissanceAspiration;
     }
 
-    public int getPositionx() {
-        return positionx;
-    }
-
-    public void setPositionx(int positionx) {
-        this.positionx = positionx;
-    }
-
-    public int getPositiony() {
-        return positiony;
-    }
-
-    public void setPositiony(int positiony) {
-        this.positiony = positiony;
-    }
-
+    /**
+     * Accesseur batterie
+     *
+     * @return batterie
+     */
     public Batterie getBatterie() {
         return batterie;
     }
 
+    /**
+     * Mutateur batterie
+     *
+     * @param batterie
+     */
     public void setBatterie(Batterie batterie) {
         this.batterie = batterie;
     }
 
+    /**
+     * Accesseur reserve
+     *
+     * @return reserve
+     */
     public Reserve getReserve() {
         return reserve;
     }
 
+    /**
+     * Mutateur reserve
+     *
+     * @param reserve
+     */
     public void setReserve(Reserve reserve) {
         this.reserve = reserve;
     }
 
-    public Direction getDeplacements() {
-        return deplacements;
+    /**
+     * Accesseur de la liste des capteurs
+     *
+     * @return liste des capteurs
+     */
+    public ArrayList<Capteur> getCapteurs() {
+        return capteurs;
     }
 
-    public void setDeplacements(Direction deplacements) {
-        this.deplacements = deplacements;
+    /**
+     * Mutateur de la liste des capteurs
+     *
+     * @param capteurs liste des capteurs
+     */
+    public void setCapteurs(ArrayList<Capteur> capteurs) {
+        this.capteurs = capteurs;
     }
 
-    public ArrayList<Capteur> getCapteur() {
-        return capteur;
-    }
-
-    public void setCapteur(ArrayList<Capteur> capteur) {
-        this.capteur = capteur;
-    }
-
+    /**
+     * Accesseur de la base
+     *
+     * @return base
+     */
     public Base getBase() {
         return base;
     }
 
+    /**
+     * Mutateur de la base
+     *
+     * @param base
+     */
     public void setBase(Base base) {
         this.base = base;
     }
 
+    /**
+     * Accesseur de la piece
+     *
+     * @return piece
+     */
     public Piece getPiece() {
         return piece;
     }
 
+    /**
+     * Mutateur de la piece
+     *
+     * @param piece
+     */
     public void setPiece(Piece piece) {
         this.piece = piece;
     }
 
-    public boolean isAspiration() {
-        return aspiration;
+    /**
+     * Accesseur de la puissance d'aspiration
+     *
+     * @return puissanceAspiration
+     */
+    public int getPuissanceAspiration() {
+        return puissanceAspiration;
     }
 
-    public void setAspiration(boolean aspiration) {
-        this.aspiration = aspiration;
+    /**
+     * Mutateur de la puissance d'aspiration
+     *
+     * @param puissanceAspiration
+     */
+    public void setPuissanceAspiration(int puissanceAspiration) {
+        this.puissanceAspiration = puissanceAspiration;
     }
 
-    public void deplacement() throws InterruptedException {
-        switch (deplacements){
-            case HAUT:
-                TimeUnit.SECONDS.sleep((long) 0.25);
-                batterie.setEnergie(batterie.getEnergie()-1);
-                positiony-=1;
-                break;
-            case BAS:
-                TimeUnit.SECONDS.sleep((long) 0.25);
-                batterie.setEnergie(batterie.getEnergie()-1);
-                positiony+=1;
-                break;
-            case GAUCHE:
-                TimeUnit.SECONDS.sleep((long) 0.25);
-                batterie.setEnergie(batterie.getEnergie()-1);
-                positionx-=1;
-                break;
-            case DROITE:
-                TimeUnit.SECONDS.sleep((long) 0.25);
-                batterie.setEnergie(batterie.getEnergie()-1);
-                positionx+=1;
-                break;
-        }
+
+    /**
+     * Decharge la batterie du robot selon le taux
+     *
+     * @param taux
+     */
+    public void dechargerBatterie(float taux) {
+        if(taux ==1)
+            this.getBatterie().setEnergie(this.getBatterie().getEnergie()-1);
+        if(taux ==2)
+            this.getBatterie().setEnergie(this.getBatterie().getEnergie()-2);
+        if(taux == 1.5)
+            this.getBatterie().setEnergie((float) (this.getBatterie().getEnergie()-1.5));
+
     }
+
+    /**
+     * Regarde si la batterie est vide
+     *
+     * @return booleen
+     */
+    public boolean batterieVide() {
+        return getBatterie().getEnergie() < 1;
+    }
+
+    /**
+     * Remplie la reserve de poussiere
+     *
+     * @param poussiere quantite de poussiere à rajouter à la reserve
+     */
+    public void remplirReserve(int poussiere) {
+        this.getReserve().setQuantitePoussiere(getReserve().getQuantitePoussiere() + poussiere);
+    }
+
 }

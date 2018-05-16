@@ -27,10 +27,10 @@ public class Piece {
                     this.elementsPiece.add(new ElementPiece(i, j, line.substring(j, j+2)));
                 }
                 i++;
+                this.nbcolonnes=line.length()/2;
             }
 
-            this.nbcolonnes = line.length()/2;
-            this.nblignes = elementsPiece.size();
+            this.nblignes = elementsPiece.size()/nbcolonnes;
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

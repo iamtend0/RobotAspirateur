@@ -6,58 +6,68 @@ package sample;
 /**
  * Classe Base
  */
-public class Base {
-
-    /** Attributs */
-    private Capteur presence;
-    private Robot robot;
-    private int positionx;
-    private int positiony;
+public class Base extends Thread {
 
     /**
-     * Constructor
-     * @param presence
-     * @param robot
-     * @param positionx
-     * @param positiony
+     * Attributs
      */
-    public Base(Capteur presence,Robot robot, int positionx, int positiony) {
+    private Capteur presence;  //capteur de presence de la base
+    private Batterie batterie; //batterie du robot
+    private Reserve reserve;   //reserve de poussière du robot
+
+
+    /**
+     * Constructeur de base
+     *
+     * @param batterie
+     * @param presence
+     * @param reserve
+     */
+    public Base(Batterie batterie, Capteur presence, Reserve reserve) {
+        this.batterie = batterie;
         this.presence = presence;
-        this.robot=robot;
-        this.positionx = positionx;
-        this.positiony = positiony;
+        this.reserve = reserve;
     }
 
+
     /**
-     * Accesseur
-     * @return
+     * Accesseur presence
+     *
+     * @return presence
      */
     public Capteur getPresence() {
         return presence;
     }
 
     /**
-     * Accesseur position x
-     * @return x
+     * Accesseur batterie
+     *
+     * @return batterie
      */
-    public int getPositionx() {
-        return positionx;
+    public Batterie getBatterie() {
+        return batterie;
     }
 
     /**
-     * Accesseur position y
-     * @return y
+     * Accesseur reserve
+     *
+     * @return reserve
      */
-    public int getPositiony() {
-        return positiony;
+    public Reserve getReserve() {
+        return reserve;
     }
 
-    public void recharge(){
-        if(getPresence().Etat==true){
-            robot.getBatterie().start();
-            robot.getReserve().start();
+    /**
+     * Processus de recharge de la batterie et vidage du reservoir avec des threads
+     */
+    public void run() {
+        if (getPresence().isEtat() == true) {
+            //Demarre le thread de recharge de la batterie
+            new Thread(this.getBatterie()).start();
+            //Demarre le thread de vidage du reservoir
+            new Thread(this.getReserve()).start();
         }
-        getPresence().setEtat(false);
+
     }
 
 }
