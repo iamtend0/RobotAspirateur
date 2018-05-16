@@ -3,11 +3,14 @@
  */
 package sample;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -22,6 +25,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -38,6 +42,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Main extends Application {
 
     private static int index = 0;
+    private int timer = 0;
     private int distanceParcourue = 0; //distance parcourue par le robot
     private int retourBase = 0;        //nombre de fois où le robot est retourné à la base
     private int quantitePoussiere = 0; //quantité de poussière amassé par le robot
@@ -79,11 +84,11 @@ public class Main extends Application {
     Label elementSol2 = new Label(" ");
     Label aspirationTapis = new Label("Aspiration en cours du tapis...");
     Label aspirationSol = new Label("Aspiration en cours du sol...");
-    Label temps = new Label("Temps ecoulé depuis demarrage :");
+    Label temps = new Label("Temps ecoulé depuis demarrage :" + timer);
     Label etatBatterie = new Label("Etat de la Batterie :" + robot.getBatterie().getEnergie() + "/" + robot.getBatterie().getCapacité());
     Label etatReserve = new Label("Etat de la Reserve:" + robot.getReserve().getQuantitePoussiere() + "/" + robot.getReserve().getTaille());
     Label poussiereRamasse = new Label("Quantité de poussière aspirée :" + quantitePoussiere);
-    Label atBase = new Label("Recharge de la batterie et vidage du reservoir en cours");
+    Label atBase = new Label("Recharge de la batterie et vidage du reservoir en cours :");
     Label distance = new Label("Distance parcourue par le robot :" + distanceParcourue);
     Label nbreBase = new Label("Nombre de fois où le robot est retourné à la base :" + retourBase);
     Label labelSliderBatterie = new Label(" ");
@@ -415,13 +420,13 @@ public class Main extends Application {
                 if (poussiere < robot.getPuissanceAspiration()) {
                     if (poussiereRestante < poussiere - robot.getPuissanceAspiration()) {
                         int reste = poussiere - poussiereRestante;
-                        spriteTapis(reste,elementTapis);
+                        spriteTapis(reste, elementTapis);
                         robot.remplirReserve(poussiereRestante);
                         quantitePoussiere += poussiereRestante;
                         //mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
                         robot.getPiece().getMatrice().get(indice[0]).setTypeElement("T" + reste);
                     } else {
-                        spriteTapis(0,elementTapis);
+                        spriteTapis(0, elementTapis);
                         robot.remplirReserve(poussiere);
                         quantitePoussiere += poussiere;
                         //mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
@@ -430,13 +435,13 @@ public class Main extends Application {
                 } else {
                     if (poussiereRestante < robot.getPuissanceAspiration()) {
                         int reste = poussiere - poussiereRestante;
-                        spriteTapis(reste,elementTapis);
+                        spriteTapis(reste, elementTapis);
                         robot.remplirReserve(poussiereRestante);
                         quantitePoussiere += poussiereRestante;
                         //mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
                         robot.getPiece().getMatrice().get(indice[0]).setTypeElement("T" + reste);
                     } else {
-                        spriteTapis(poussiereAspire,elementTapis);
+                        spriteTapis(poussiereAspire, elementTapis);
                         robot.remplirReserve(robot.getPuissanceAspiration());
                         quantitePoussiere += robot.getPuissanceAspiration();
                         //mise a jour du tapis dans la piece avec sa nouvelle quantité de poussière
@@ -630,10 +635,54 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
 
         gridpane.setPrefSize(400, 400);
+
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.setTranslateY((int) (gridpane.getPrefHeight() + 20));
+        progressBar.setTranslateX(380);
+        ProgressIndicator progressIndicator = new ProgressIndicator();
+        progressIndicator.setTranslateY((int) (gridpane.getPrefHeight() + 20));
+        progressIndicator.setTranslateX(490);
+        progressBar.setVisible(false);
+        progressIndicator.setVisible(false);
+
+        /* la classe Service va nous permettre de creer une tâche
+           qui va nous donner la possiblite de configurer l'avancement
+            de la progressBar */
+
+        Service service = new Service() {
+            @Override
+            protected Task<Void> createTask() {
+                Task<Void> task = new Task<Void>() {
+                    protected Void call() throws Exception {
+                        for (int i = 0; i < 121; i++) {
+                            Thread.sleep(40);
+                            updateProgress(i, 120);
+                        }
+                        return null;
+                    }
+                };
+                return task;
+            }
+        };
+
+        //on lie la progressBar au service et donc à la tache
+        progressBar.progressProperty().bind(service.progressProperty());
+        progressIndicator.progressProperty().bind(service.progressProperty());
+
+        /* On utilise la classe Timeline pour creer un compteur
+            qui va s'incrementer toutes les secondes */
+        Timeline compteur = new Timeline(
+                new KeyFrame(Duration.millis(1000), e -> {
+                    timer++;
+                    temps.setText("Temps ecoulé depuis demarrage : " + timer+"s");
+                })
+        );
+        compteur.setCycleCount(Animation.INDEFINITE);
+        compteur.play();
+
 
         /*construit les colonnes et les lignes du gridpane
         dont la taille sera la taille de la piece */
@@ -651,20 +700,20 @@ public class Main extends Application {
 
         //appelle la fonction capteurBase pour determiner la position de la Base
         int[] positionBase = robot.getBase().getPresence().capteurBase();
+        //ajoute au gridpane l'element de la Base
+        gridpane.add(elementBase, positionBase[1], positionBase[0]);
         //fixe la position initial du robot sur la Base
         gridpane.add(aspirateur, positionBase[1], positionBase[0]);
         //centre le robot sur la case
         gridpane.setHalignment(aspirateur, HPos.CENTER);
         gridpane.setValignment(aspirateur, VPos.CENTER);
-        //ajoute au gridpane l'element de la Base
-        gridpane.add(elementBase, positionBase[1], positionBase[0]);
 
 
         /*fixe la position de tous les labels */
         positionLabel(temps, (int) (gridpane.getPrefWidth() + 10), 5);
         positionLabel(etatBatterie, (int) (gridpane.getPrefWidth() + 10), 20);
         positionLabel(etatReserve, (int) (gridpane.getPrefWidth() + 10), 40);
-        positionLabel(atBase, 30, 250);
+        positionLabel(atBase, 10, (int) (gridpane.getPrefHeight() + 20));
         atBase.setVisible(false);
         aspirationTapis.setVisible(false);
         aspirationSol.setVisible(false);
@@ -694,6 +743,8 @@ public class Main extends Application {
         pane.getChildren().add(nbreBase);
         pane.getChildren().add(poussiereRamasse);
         pane.getChildren().add(barre);
+        pane.getChildren().add(progressBar);
+        pane.getChildren().add(progressIndicator);
         pane.getChildren().add(gridpane);
 
 
@@ -911,19 +962,34 @@ public class Main extends Application {
                     nbreBase.setText("Nombre de fois où le robot est retourné à la base :" + retourBase);
                     //on commence le processus de recharge de la batterie et de vidage du reservoir
                     new Thread(robot.getBase()).start();
+                    //on demarre le service de la barre de progression
+                    service.restart();
+                    progressBar.setVisible(true);
+                    progressIndicator.setVisible(true);
+                    etatBatterie.setTextFill(Color.rgb(255, 0, 0));
+                    etatReserve.setTextFill(Color.rgb(255, 0, 0));
+                    //5 secondes pour recharger la batterie
                     Timeline timer = new Timeline(
                             new KeyFrame(Duration.seconds(5), event -> {
                                 etatBatterie.setText("Etat de la Batterie :" + robot.getBatterie().getEnergie() + "/" + robot.getBatterie().getCapacité());
                                 robot.getBase().getPresence().setEtat(false);
                                 etat.set(true);
                                 atBase.setVisible(false);
+                                progressBar.setVisible(false);
+                                progressIndicator.setVisible(false);
+                                etatBatterie.setTextFill(Color.BLACK);
                             })
 
 
                     );
                     timer.play();
+                    //2 secondes pour vider le reservoir
                     Timeline timer2 = new Timeline(
-                            new KeyFrame(Duration.seconds(2), event -> etatReserve.setText("Etat de la Reserve:" + robot.getReserve().getQuantitePoussiere() + "% rempli"))
+                            new KeyFrame(Duration.seconds(2), event -> {
+                                etatReserve.setText(
+                                        "Etat de la Reserve:" + robot.getReserve().getQuantitePoussiere() + "/" + robot.getReserve().getTaille());
+                                etatReserve.setTextFill(Color.BLACK);
+                            })
 
 
                     );
@@ -937,8 +1003,9 @@ public class Main extends Application {
                 alertBatterie.showAndWait();
             }
         });
-
+        primaryStage.setTitle("Robot aspirateur");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
 }
