@@ -377,7 +377,6 @@ public class Main extends Application {
 
     public void capteurTapis(int x, int y, int positionCapteur) {
         Label elementTapis = new Label("");
-        positionLabel(aspirationTapis, 30, 250);
         aspirationTapis.setVisible(false);
         int indice[] = robot.getCapteurs().get(positionCapteur).capteurTapis(x, y);
         int poussiere = indice[1]; //Quantité de poussière actuellement presente sur le tapis
@@ -386,7 +385,7 @@ public class Main extends Application {
         robot.getCapteurs().get(positionCapteur).setEtat(true);
         //appelle la fonction capteurTapis pour savoir si le capteur detecte un tapis en position (x,y)
         robot.getCapteurs().get(positionCapteur).capteurTapis(x, y);
-
+        // TODO mettre elementTapis2 en dynamique
         if (!robot.getCapteurs().get(positionCapteur).isEtat()) {
             gridpane.getChildren().remove(elementTapis2);
             spriteTapis(poussiere, elementTapis2);
@@ -450,7 +449,6 @@ public class Main extends Application {
                 }
 
                 aspirationTapis.setVisible(true);
-
                 //timer qui fixe le temps de l'aspiration à 0.50 secondes
                 Timeline timer = new Timeline(
                         new KeyFrame(Duration.seconds(0.50), event -> {
@@ -487,7 +485,6 @@ public class Main extends Application {
 
     public void capteurSol(int x, int y, int positionCapteur) {
         Label elementSol = new Label("");
-        positionLabel(aspirationSol, 30, 250);
         aspirationSol.setVisible(false);
 
         int indice[] = robot.getCapteurs().get(positionCapteur).capteurSol(x, y);
@@ -637,7 +634,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
 
-        gridpane.setPrefSize(990, 990);
+        gridpane.setPrefSize(500, 500);
 
         ProgressBar progressBar = new ProgressBar();
         progressBar.setTranslateY((int) (gridpane.getPrefHeight() + 20));
@@ -714,6 +711,8 @@ public class Main extends Application {
         positionLabel(etatBatterie, (int) (gridpane.getPrefWidth() + 10), 20);
         positionLabel(etatReserve, (int) (gridpane.getPrefWidth() + 10), 40);
         positionLabel(atBase, 10, (int) (gridpane.getPrefHeight() + 20));
+        positionLabel(aspirationTapis,10, (int) (gridpane.getPrefHeight() + 20));
+        positionLabel(aspirationSol, 10, (int) (gridpane.getPrefHeight() + 20));
         atBase.setVisible(false);
         aspirationTapis.setVisible(false);
         aspirationSol.setVisible(false);
@@ -930,6 +929,7 @@ public class Main extends Application {
                                     colonne=gridpane.getColumnIndex(aspirateur)+(gridpane.getColumnIndex(aspirateur)+2);
 
                                 if (capteurObstacle(gridpane.getRowIndex(aspirateur), colonne , 2)) {
+                                    gridpane.getChildren().remove(aspirateur);
                                     gridpane.add(aspirateur, gridpane.getColumnIndex(aspirateur), gridpane.getRowIndex(aspirateur));
                                 } else {
                                     if (capteurVide(gridpane.getRowIndex(aspirateur), colonne , 2)) {

@@ -130,7 +130,6 @@ public class Capteur {
         for (int j = 0; j < piece.getMatrice().size(); j++) {
             for (int i = 0; i < 10; i++) {
                 if (piece.getMatrice().get(j).getTypeElement().equals("0" + i) && piece.getMatrice().get(j).getLigne() == x && piece.getMatrice().get(j).getColonne() == y) {
-                    System.out.println(y);
                     setEtat(false);
                     indiceSol = j;
                     tauxPoussiere = i;
