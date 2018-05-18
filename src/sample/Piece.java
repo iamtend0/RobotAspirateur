@@ -24,7 +24,9 @@ public class Piece {
             int i = 0;
             while ((line = reader.readLine()) != null) {
                 for (int j = 0; j <line.length(); j=j+2) {
-                    this.elementsPiece.add(new ElementPiece(i, j, line.substring(j, j+2)));
+                    try {
+                        this.elementsPiece.add(new ElementPiece(i, j, line.substring(j, j+2)));
+                    } catch(NotElementException e) { }
                 }
                 i++;
                 this.nbcolonnes=line.length()/2;
